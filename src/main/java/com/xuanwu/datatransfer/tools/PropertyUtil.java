@@ -3,7 +3,6 @@ package com.xuanwu.datatransfer.tools;
 import com.xuanwu.datatransfer.ui.AppMainWindow;
 
 import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,7 +22,8 @@ public class PropertyUtil {
         try {
             InputStream in = new BufferedInputStream (AppMainWindow.class.getResourceAsStream("/config/zh-cn.properties"));
             pps.load(in);
-            String value = new String(pps.getProperty(key).getBytes("ISO8859-1"),"UTF-8");
+            //String value = new String(pps.getProperty(key).getBytes("ISO8859-1"),"UTF-8");
+            String value = pps.getProperty(key);
             return value;
 
         }catch (IOException e) {

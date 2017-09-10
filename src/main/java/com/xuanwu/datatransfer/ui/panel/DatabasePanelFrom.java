@@ -5,7 +5,6 @@ import com.xuanwu.datatransfer.ui.ConstantsUI;
 import com.xuanwu.datatransfer.ui.MyIconButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.xuanwu.datatransfer.tools.ConstantsTools;
 import com.xuanwu.datatransfer.tools.DESPlus;
 import com.xuanwu.datatransfer.tools.DbUtilSQLServer;
 import com.xuanwu.datatransfer.tools.PropertyUtil;
@@ -201,11 +200,11 @@ public class DatabasePanelFrom extends JPanel {
 					//ConstantsTools.CONFIGER.setUserFrom(user);
 					//ConstantsTools.CONFIGER.setPasswordFrom(password);
 
-					JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.save.success"), PropertyUtil.getProperty("ds.ui.tips"),
+					JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.save.success"), PropertyUtil.getProperty("ds.ui.tips"),
 							JOptionPane.PLAIN_MESSAGE);
 
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.save.fail") + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
+					JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.save.fail") + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
 							JOptionPane.ERROR_MESSAGE);
 					logger.error("Write to xml file error" + e1.toString());
 				}
@@ -226,15 +225,15 @@ public class DatabasePanelFrom extends JPanel {
 					String DBPassword = new String(passwordFieldDatabasePassword.getPassword());
 					Connection conn = dbSQLServer.testConnection(DBUrl, DBName, DBUser, DBPassword);
 					if (conn == null) {
-						JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.fail"), PropertyUtil.getProperty("ds.ui.tips"),
+						JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.database.err.link.fail"), PropertyUtil.getProperty("ds.ui.tips"),
 								JOptionPane.ERROR_MESSAGE);
 					} else {
-						JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.success"), PropertyUtil.getProperty("ds.ui.tips"),
+						JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.database.err.link.success"), PropertyUtil.getProperty("ds.ui.tips"),
 								JOptionPane.PLAIN_MESSAGE);
 					}
 
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.fail")+"\n" + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
+					JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.database.err.link.fail")+"\n" + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 

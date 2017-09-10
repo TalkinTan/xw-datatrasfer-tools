@@ -25,11 +25,13 @@ public class AppMainWindow {
     private static JPanel mainPanel;
     public static JPanel mainPanelCenter;
 
-    public static StatusPanel statusPanel;
-    public static DatabasePanel databasePanel;
-    public static SchedulePanel schedulePanel;
-    public static BackupPanel backupPanel;
-    public static SettingPanel settingPanel;
+
+    public static DBConnectInfoPanel panelDBConnectionInfo;
+    public static TaskChoisePanel panelTaskChoise;
+    public static ExecuteStatusPanel panelExecuteStatus;
+    //public static SchedulePanel schedulePanel;
+    //public static BackupPanel backupPanel;
+    //public static SettingPanel settingPanel;
     // 新建备份dialog
     public static JDialog dialog;
 
@@ -54,7 +56,7 @@ public class AppMainWindow {
      */
     public AppMainWindow() {
         initialize();
-        StatusPanel.buttonStartSchedule.doClick();
+        //ExecuteStatusPanel.buttonStartSchedule.doClick();
     }
 
     /**
@@ -83,17 +85,19 @@ public class AppMainWindow {
         mainPanel.setLayout(new BorderLayout());
 
         ToolBarPanel toolbar = new ToolBarPanel();
-        statusPanel = new StatusPanel();
-        databasePanel = new DatabasePanel();
-        schedulePanel = new SchedulePanel();
-        backupPanel = new BackupPanel();
-        settingPanel = new SettingPanel();
+
+        panelDBConnectionInfo = new DBConnectInfoPanel();
+        panelExecuteStatus = new ExecuteStatusPanel();
+        panelTaskChoise = new TaskChoisePanel();
+        //schedulePanel = new SchedulePanel();
+        //backupPanel = new BackupPanel();
+        //settingPanel = new SettingPanel();
 
         mainPanel.add(toolbar, BorderLayout.WEST);
 
         mainPanelCenter = new JPanel(true);
         mainPanelCenter.setLayout(new BorderLayout());
-        mainPanelCenter.add(statusPanel, BorderLayout.CENTER);
+        mainPanelCenter.add(panelDBConnectionInfo, BorderLayout.CENTER);
 
         mainPanel.add(mainPanelCenter, BorderLayout.CENTER);
 
@@ -130,12 +134,15 @@ public class AppMainWindow {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if (!StatusPanel.buttonStartSchedule.isEnabled()) {
-                    JOptionPane.showMessageDialog(AppMainWindow.statusPanel,
+                /*if (!ExecuteStatusPanel.buttonStartSchedule.isEnabled()) {
+                    JOptionPane.showMessageDialog(AppMainWindow.panelExecuteStatus,
                             PropertyUtil.getProperty("ds.ui.mainwindow.exitconfirm"), "Sorry~", JOptionPane.WARNING_MESSAGE);
                 } else {
+
                     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                }
+
+                }*/
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
             }
 

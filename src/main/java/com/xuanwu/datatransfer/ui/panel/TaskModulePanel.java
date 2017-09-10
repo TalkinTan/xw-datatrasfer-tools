@@ -1,27 +1,19 @@
 package com.xuanwu.datatransfer.ui.panel;
 
-import com.xuanwu.datatransfer.ui.AppMainWindow;
+import com.xuanwu.datatransfer.tools.DESPlus;
+import com.xuanwu.datatransfer.tools.PropertyUtil;
 import com.xuanwu.datatransfer.ui.ConstantsUI;
 import com.xuanwu.datatransfer.ui.MyIconButton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.xuanwu.datatransfer.tools.ConstantsTools;
-import com.xuanwu.datatransfer.tools.DESPlus;
-import com.xuanwu.datatransfer.tools.DbUtilMySQL;
-import com.xuanwu.datatransfer.tools.PropertyUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
 
 /**
- * 目标数据库面板
- *
- * @author Bob
+ * 模块任务面板
  */
-public class DatabasePanelTo extends JPanel {
+public class TaskModulePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,12 +24,12 @@ public class DatabasePanelTo extends JPanel {
     private static JTextField textFieldDatabaseUser;
     private static JPasswordField passwordFieldDatabasePassword;
 
-    private static final Logger logger = LoggerFactory.getLogger(DatabasePanelTo.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaskModulePanel.class);
 
     /**
      * 构造
      */
-    public DatabasePanelTo() {
+    public TaskModulePanel() {
         initialize();
         addComponent();
         setContent();
@@ -174,62 +166,7 @@ public class DatabasePanelTo extends JPanel {
      * 为相关组件添加事件监听
      */
     private void addListener() {
-        buttonSave.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                try {
-
-                    String password = "";
-                    String user = "";
-                    try {
-                        DESPlus des = new DESPlus();
-                        user = des.encrypt(textFieldDatabaseUser.getText());
-                        password = des.encrypt(new String(passwordFieldDatabasePassword.getPassword()));
-                    } catch (Exception e1) {
-                        logger.error(PropertyUtil.getProperty("ds.ui.database.to.err.encode") + e1.toString());
-                        e1.printStackTrace();
-                    }
-
-                    JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.save.success"), PropertyUtil.getProperty("ds.ui.tips"),
-                            JOptionPane.PLAIN_MESSAGE);
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.save.fail") + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
-                            JOptionPane.ERROR_MESSAGE);
-                    logger.error("Write to xml file error" + e1.toString());
-                }
-
-            }
-        });
-
-        buttonTestLink.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                try {
-                    DbUtilMySQL dbMySQL = DbUtilMySQL.getInstance();
-                    String DBUrl = textFieldDatabaseHost.getText();
-                    String DBName = textFieldDatabaseName.getText();
-                    String DBUser = textFieldDatabaseUser.getText();
-                    String DBPassword = new String(passwordFieldDatabasePassword.getPassword());
-                    Connection conn = dbMySQL.testConnection(DBUrl, DBName, DBUser, DBPassword);
-                    if (conn == null) {
-                        JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.fail"), PropertyUtil.getProperty("ds.ui.tips"),
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.success"), PropertyUtil.getProperty("ds.ui.tips"),
-                                JOptionPane.PLAIN_MESSAGE);
-                    }
-
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(AppMainWindow.databasePanel, PropertyUtil.getProperty("ds.ui.database.err.link.fail") + e1.getMessage(), PropertyUtil.getProperty("ds.ui.tips"),
-                            JOptionPane.ERROR_MESSAGE);
-                }
-
-            }
-        });
 
     }
 }

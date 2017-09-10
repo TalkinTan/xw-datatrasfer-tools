@@ -1,7 +1,7 @@
 package com.xuanwu.datatransfer.logic;
 
 import com.xuanwu.datatransfer.tools.*;
-import com.xuanwu.datatransfer.ui.panel.StatusPanel;
+import com.xuanwu.datatransfer.ui.panel.ExecuteStatusPanel;
 
 /**
  * 定时任务执行器，继承于执行器线程类
@@ -11,40 +11,39 @@ import com.xuanwu.datatransfer.ui.panel.StatusPanel;
 public class ScheduleExecuteThread extends ExecuteThread {
 
     public void run() {
-        if (StatusPanel.isRunning == false) {
-            StatusPanel.isRunning = true;
+        if (ExecuteStatusPanel.isRunning == false) {
+            ExecuteStatusPanel.isRunning = true;
             this.setName("ScheduleExecuteThread");
-            StatusPanel.buttonStartNow.setEnabled(false);
             long enterTime = System.currentTimeMillis(); // 毫秒数
-            StatusPanel.progressTotal.setMaximum(6);
+            ExecuteStatusPanel.progressTotal.setMaximum(6);
             // 初始化变量
             init();
             // 测试连接
             boolean isLinked = testLink();
 
             if (isLinked) {
-                StatusPanel.progressTotal.setValue(1);
+                ExecuteStatusPanel.progressTotal.setValue(1);
                 // 分析配置文件
                 boolean isAnalyseSuccess = analyseConfigFile();
                 if (isAnalyseSuccess) {
-                    StatusPanel.progressTotal.setValue(2);
+                    ExecuteStatusPanel.progressTotal.setValue(2);
                     // 备份
                     if (true) {
                         backUp();
                     }
-                    StatusPanel.progressTotal.setValue(3);
+                    ExecuteStatusPanel.progressTotal.setValue(3);
                     // 建立新快照
                     boolean isSnapSuccess = newSnap();
                     if (isSnapSuccess) {
-                        StatusPanel.progressTotal.setValue(4);
+                        ExecuteStatusPanel.progressTotal.setValue(4);
                         // 对比快照,并根据对比结果生成SQL
                         boolean isDiffSuccess = diffSnap();
                         if (isDiffSuccess) {
-                            StatusPanel.progressTotal.setValue(5);
+                            ExecuteStatusPanel.progressTotal.setValue(5);
                             // 执行SQL
                             boolean isExecuteSuccess = executeSQL();
                             if (isExecuteSuccess) {
-                                StatusPanel.progressTotal.setValue(6);
+                                ExecuteStatusPanel.progressTotal.setValue(6);
 
                                 // 设置持续时间
                                 long leaveTime = System.currentTimeMillis(); // 毫秒数
@@ -79,8 +78,8 @@ public class ScheduleExecuteThread extends ExecuteThread {
 
             }
             // 设置显示下一次执行时间
-            StatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + Utils.getNextSyncTime());
-            StatusPanel.isRunning = false;
+            ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + Utils.getNextSyncTime());
+            ExecuteStatusPanel.isRunning = false;
         }
     }
 }

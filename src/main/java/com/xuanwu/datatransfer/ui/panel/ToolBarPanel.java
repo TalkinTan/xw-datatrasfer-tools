@@ -20,11 +20,9 @@ public class ToolBarPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
-	private static MyIconButton buttonStatus;
-	private static MyIconButton buttonDatabase;
-	private static MyIconButton buttonSchedule;
-	private static MyIconButton buttonBackup;
-	private static MyIconButton buttonSetting;
+	private static MyIconButton buttonDbConnect;
+	private static MyIconButton buttonExecuteInfo;
+	private static MyIconButton buttonTaskChoise;
 
 	/**
 	 * 构造
@@ -59,133 +57,79 @@ public class ToolBarPanel extends JPanel {
 		panelDown.setBackground(ConstantsUI.TOOL_BAR_BACK_COLOR);
 		panelDown.setLayout(new BorderLayout(0, 0));
 
-		buttonStatus = new MyIconButton(ConstantsUI.ICON_STATUS_ENABLE, ConstantsUI.ICON_STATUS_ENABLE,
+
+		buttonDbConnect = new MyIconButton(ConstantsUI.ICON_STATUS_ENABLE, ConstantsUI.ICON_STATUS_ENABLE,
 				ConstantsUI.ICON_STATUS, PropertyUtil.getProperty("ds.ui.status.title"));
-		buttonDatabase = new MyIconButton(ConstantsUI.ICON_DATABASE, ConstantsUI.ICON_DATABASE_ENABLE,
+		buttonTaskChoise = new MyIconButton(ConstantsUI.ICON_DATABASE, ConstantsUI.ICON_DATABASE_ENABLE,
 				ConstantsUI.ICON_DATABASE, PropertyUtil.getProperty("ds.ui.database.title"));
-		buttonSchedule = new MyIconButton(ConstantsUI.ICON_SCHEDULE, ConstantsUI.ICON_SCHEDULE_ENABLE,
+		buttonExecuteInfo = new MyIconButton(ConstantsUI.ICON_SCHEDULE, ConstantsUI.ICON_SCHEDULE_ENABLE,
 				ConstantsUI.ICON_SCHEDULE, PropertyUtil.getProperty("ds.ui.schedule.title"));
-		buttonBackup = new MyIconButton(ConstantsUI.ICON_BACKUP, ConstantsUI.ICON_BACKUP_ENABLE,
-				ConstantsUI.ICON_BACKUP, PropertyUtil.getProperty("ds.ui.backup.title"));
-		buttonSetting = new MyIconButton(ConstantsUI.ICON_SETTING, ConstantsUI.ICON_SETTING_ENABLE,
-				ConstantsUI.ICON_SETTING, PropertyUtil.getProperty("ds.ui.setting.title"));
 
-		panelUp.add(buttonStatus);
-		panelUp.add(buttonDatabase);
-		panelUp.add(buttonSchedule);
-		panelUp.add(buttonBackup);
+		panelUp.add(buttonDbConnect);
+		panelUp.add(buttonTaskChoise);
+		panelUp.add(buttonExecuteInfo);
 
-		panelDown.add(buttonSetting, BorderLayout.SOUTH);
 		this.add(panelUp);
-		this.add(panelDown);
-
 	}
 
 	/**
 	 * 为各按钮添加事件动作监听
 	 */
 	private void addListener() {
-		buttonStatus.addActionListener(new ActionListener() {
+		buttonDbConnect.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				buttonStatus.setIcon(ConstantsUI.ICON_STATUS_ENABLE);
-				buttonDatabase.setIcon(ConstantsUI.ICON_DATABASE);
-				buttonSchedule.setIcon(ConstantsUI.ICON_SCHEDULE);
-				buttonBackup.setIcon(ConstantsUI.ICON_BACKUP);
-				buttonSetting.setIcon(ConstantsUI.ICON_SETTING);
+				buttonDbConnect.setIcon(ConstantsUI.ICON_STATUS_ENABLE);
+				buttonExecuteInfo.setIcon(ConstantsUI.ICON_SCHEDULE);
+				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
 
 				AppMainWindow.mainPanelCenter.removeAll();
-				StatusPanel.setContent();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.statusPanel, BorderLayout.CENTER);
+				ExecuteStatusPanel.setContent();
+				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelDBConnectionInfo, BorderLayout.CENTER);
 
 				AppMainWindow.mainPanelCenter.updateUI();
 
 			}
 		});
 
-		buttonDatabase.addActionListener(new ActionListener() {
+
+		buttonExecuteInfo.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				buttonStatus.setIcon(ConstantsUI.ICON_STATUS);
-				buttonDatabase.setIcon(ConstantsUI.ICON_DATABASE_ENABLE);
-				buttonSchedule.setIcon(ConstantsUI.ICON_SCHEDULE);
-				buttonBackup.setIcon(ConstantsUI.ICON_BACKUP);
-				buttonSetting.setIcon(ConstantsUI.ICON_SETTING);
+				buttonDbConnect.setIcon(ConstantsUI.ICON_STATUS);
+				buttonExecuteInfo.setIcon(ConstantsUI.ICON_SCHEDULE_ENABLE);
+				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
+
+				AppMainWindow.mainPanelCenter.removeAll();
+				ExecuteStatusPanel.setContent();
+				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelExecuteStatus, BorderLayout.CENTER);
+
+				AppMainWindow.mainPanelCenter.updateUI();
+
+			}
+		});
+
+		buttonTaskChoise.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				buttonDbConnect.setIcon(ConstantsUI.ICON_STATUS);
+				buttonExecuteInfo.setIcon(ConstantsUI.ICON_SCHEDULE);
+				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE_ENABLE);
 
 				AppMainWindow.mainPanelCenter.removeAll();
 				DatabasePanelFrom.setContent();
-				DatabasePanelTo.setContent();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.databasePanel, BorderLayout.CENTER);
+				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelTaskChoise, BorderLayout.CENTER);
 
 				AppMainWindow.mainPanelCenter.updateUI();
 
 			}
 		});
 
-		buttonSchedule.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				buttonStatus.setIcon(ConstantsUI.ICON_STATUS);
-				buttonDatabase.setIcon(ConstantsUI.ICON_DATABASE);
-				buttonSchedule.setIcon(ConstantsUI.ICON_SCHEDULE_ENABLE);
-				buttonBackup.setIcon(ConstantsUI.ICON_BACKUP);
-				buttonSetting.setIcon(ConstantsUI.ICON_SETTING);
-
-				AppMainWindow.mainPanelCenter.removeAll();
-				AppMainWindow.schedulePanel.setCurrentSchedule();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.schedulePanel, BorderLayout.CENTER);
-
-				AppMainWindow.mainPanelCenter.updateUI();
-
-			}
-		});
-
-		buttonBackup.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				buttonStatus.setIcon(ConstantsUI.ICON_STATUS);
-				buttonDatabase.setIcon(ConstantsUI.ICON_DATABASE);
-				buttonSchedule.setIcon(ConstantsUI.ICON_SCHEDULE);
-				buttonBackup.setIcon(ConstantsUI.ICON_BACKUP_ENABLE);
-				buttonSetting.setIcon(ConstantsUI.ICON_SETTING);
-
-				BackupPanel.initTableData();
-				BackupPanel.tableFrom.validate();
-
-				AppMainWindow.mainPanelCenter.removeAll();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.backupPanel, BorderLayout.CENTER);
-
-				AppMainWindow.mainPanelCenter.updateUI();
-
-			}
-		});
-
-		buttonSetting.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				buttonStatus.setIcon(ConstantsUI.ICON_STATUS);
-				buttonDatabase.setIcon(ConstantsUI.ICON_DATABASE);
-				buttonSchedule.setIcon(ConstantsUI.ICON_SCHEDULE);
-				buttonBackup.setIcon(ConstantsUI.ICON_BACKUP);
-				buttonSetting.setIcon(ConstantsUI.ICON_SETTING_ENABLE);
-
-				AppMainWindow.mainPanelCenter.removeAll();
-				SettingPanelOption.setCurrentOption();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.settingPanel, BorderLayout.CENTER);
-
-				AppMainWindow.mainPanelCenter.updateUI();
-
-			}
-		});
 	}
 }

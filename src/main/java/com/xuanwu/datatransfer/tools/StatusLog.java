@@ -1,7 +1,7 @@
 package com.xuanwu.datatransfer.tools;
 
 
-import com.xuanwu.datatransfer.ui.panel.StatusPanel;
+import com.xuanwu.datatransfer.ui.panel.ExecuteStatusPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,7 @@ public class StatusLog {
      * @param status
      */
     public static void setStatus(String status) {
-        StatusPanel.labelStatus.setText(status);
+        ExecuteStatusPanel.labelStatus.setText(status);
     }
 
     /**
@@ -29,7 +29,7 @@ public class StatusLog {
      * @param level
      */
     public static void setStatusDetail(String statusDetail, Enum<LogLevel> level) {
-        StatusPanel.labelStatusDetail.setText(PropertyUtil.getProperty("ds.tool.detail") + statusDetail);
+        ExecuteStatusPanel.labelStatusDetail.setText(PropertyUtil.getProperty("ds.tool.detail") + statusDetail);
         if (true) {
 
             if (level.toString().equals("INFO")) {
@@ -70,7 +70,7 @@ public class StatusLog {
      * @param nextTime
      */
     public static void setNextTime(String nextTime) {
-        StatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + nextTime);
+        ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + nextTime);
     }
 
     /**

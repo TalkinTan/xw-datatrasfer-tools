@@ -1,14 +1,12 @@
 package com.xuanwu.datatransfer.ui.panel;
 
-import com.xuanwu.datatransfer.ui.ConstantsUI;
-import com.xuanwu.datatransfer.ui.MyIconButton;
-import com.xuanwu.datatransfer.logic.ExecuteThread;
 import com.xuanwu.datatransfer.logic.ScheduleExecuteThread;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.xuanwu.datatransfer.tools.ConstantsTools;
 import com.xuanwu.datatransfer.tools.PropertyUtil;
 import com.xuanwu.datatransfer.tools.StatusLog;
+import com.xuanwu.datatransfer.ui.ConstantsUI;
+import com.xuanwu.datatransfer.ui.MyIconButton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,14 +29,13 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Bob
  */
-public class StatusPanel extends JPanel {
+public class ExecuteStatusPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = LoggerFactory.getLogger(StatusPanel.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExecuteStatusPanel.class);
 
     public static MyIconButton buttonStartSchedule;
     public static MyIconButton buttonStop;
-    public static MyIconButton buttonStartNow;
 
     public static JProgressBar progressTotal;
     public static JProgressBar progressCurrent;
@@ -61,7 +58,7 @@ public class StatusPanel extends JPanel {
     /**
      * 构造
      */
-    public StatusPanel() {
+    public ExecuteStatusPanel() {
         super(true);
         initialize();
         addComponent();
@@ -98,7 +95,7 @@ public class StatusPanel extends JPanel {
         panelUp.setBackground(ConstantsUI.MAIN_BACK_COLOR);
         panelUp.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 5));
 
-        JLabel labelTitle = new JLabel(PropertyUtil.getProperty("ds.ui.status.title"));
+        JLabel labelTitle = new JLabel(PropertyUtil.getProperty("ds.ui.executepanel.title"));
         labelTitle.setFont(ConstantsUI.FONT_TITLE);
         labelTitle.setForeground(ConstantsUI.TOOL_BAR_BACK_COLOR);
         panelUp.add(labelTitle);
@@ -234,24 +231,17 @@ public class StatusPanel extends JPanel {
         panelDown.setLayout(new GridLayout(1, 2));
         JPanel panelGrid1 = new JPanel();
         panelGrid1.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelGrid1.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 15));
-        JPanel panelGrid2 = new JPanel();
-        panelGrid2.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelGrid2.setLayout(new FlowLayout(FlowLayout.RIGHT, ConstantsUI.MAIN_H_GAP, 15));
+        panelGrid1.setLayout(new FlowLayout(FlowLayout.RIGHT, ConstantsUI.MAIN_H_GAP, 15));
 
         buttonStartSchedule = new MyIconButton(ConstantsUI.ICON_START_SCHEDULE, ConstantsUI.ICON_START_SCHEDULE_ENABLE,
                 ConstantsUI.ICON_START_SCHEDULE_DISABLE, "");
         buttonStop = new MyIconButton(ConstantsUI.ICON_STOP, ConstantsUI.ICON_STOP_ENABLE,
                 ConstantsUI.ICON_STOP_DISABLE, "");
         buttonStop.setEnabled(false);
-        buttonStartNow = new MyIconButton(ConstantsUI.ICON_SYNC_NOW, ConstantsUI.ICON_SYNC_NOW_ENABLE,
-                ConstantsUI.ICON_SYNC_NOW_DISABLE, "");
         panelGrid1.add(buttonStartSchedule);
         panelGrid1.add(buttonStop);
-        panelGrid2.add(buttonStartNow);
 
         panelDown.add(panelGrid1);
-        panelDown.add(panelGrid2);
         return panelDown;
     }
 
@@ -275,22 +265,6 @@ public class StatusPanel extends JPanel {
      * 为各组件添加事件监听
      */
     private void addListener() {
-        buttonStartNow.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (isRunning == false) {
-                    buttonStartNow.setEnabled(false);
-                    buttonStartSchedule.setEnabled(false);
-                    StatusPanel.setContent();
-                    StatusPanel.progressTotal.setValue(0);
-                    StatusPanel.progressCurrent.setValue(0);
-                    labelStatus.setText(PropertyUtil.getProperty("ds.ui.status.manu"));
-                    ExecuteThread syncThread = new ExecuteThread();
-                    syncThread.start();
-                }
-            }
-        });
         buttonStartSchedule.addActionListener(new ActionListener() {
 
             @Override
@@ -298,10 +272,10 @@ public class StatusPanel extends JPanel {
 
                 buttonStartSchedule.setEnabled(false);
                 buttonStop.setEnabled(true);
-                StatusPanel.setContent();
+                ExecuteStatusPanel.setContent();
 
-                StatusPanel.progressTotal.setValue(0);
-                StatusPanel.progressCurrent.setValue(0);
+                ExecuteStatusPanel.progressTotal.setValue(0);
+                ExecuteStatusPanel.progressCurrent.setValue(0);
                 labelStatus.setText(PropertyUtil.getProperty("ds.ui.status.scheduledRunning"));
                 ScheduleExecuteThread syncThread = new ScheduleExecuteThread();
                 service = Executors.newSingleThreadScheduledExecutor();
@@ -340,7 +314,6 @@ public class StatusPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buttonStartSchedule.setEnabled(true);
-                StatusPanel.buttonStartNow.setEnabled(true);
                 service.shutdown();
                 StatusLog.setNextTime("");
                 labelStatus.setText(PropertyUtil.getProperty("ds.ui.status.ready"));

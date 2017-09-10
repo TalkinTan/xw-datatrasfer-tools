@@ -1,6 +1,6 @@
 package com.xuanwu.datatransfer.logic;
 
-import com.xuanwu.datatransfer.ui.panel.StatusPanel;
+import com.xuanwu.datatransfer.ui.panel.ExecuteStatusPanel;
 import com.opencsv.CSVWriter;
 import com.xuanwu.datatransfer.logic.bean.Table;
 import com.xuanwu.datatransfer.tools.*;
@@ -47,18 +47,18 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
      */
     public boolean testLink() {
         StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.testLinking"), LogLevel.INFO);
-        StatusPanel.progressCurrent.setMaximum(2);
-        StatusPanel.progressCurrent.setValue(0);
+        ExecuteStatusPanel.progressCurrent.setMaximum(2);
+        ExecuteStatusPanel.progressCurrent.setValue(0);
         boolean isLinkedPass = true;
         DbUtilSQLServer dbSQLServer = null;
         DbUtilMySQL dbMySQL = null;
         try {
             dbSQLServer = DbUtilSQLServer.getInstance();
             Connection connSQLServer = dbSQLServer.testConnection();
-            StatusPanel.progressCurrent.setValue(1);
+            ExecuteStatusPanel.progressCurrent.setValue(1);
             dbMySQL = DbUtilMySQL.getInstance();
             Connection connMySQL = dbMySQL.testConnection();
-            StatusPanel.progressCurrent.setValue(2);
+            ExecuteStatusPanel.progressCurrent.setValue(2);
             if (connSQLServer == null) {
                 isLinkedPass = false;
                 StatusLog.setStatusDetail("SQLServer " + PropertyUtil.getProperty("ds.logic.testLinkFail"), LogLevel.ERROR);
@@ -118,16 +118,16 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
         File tableFieldFiles[] = tableFieldDir.listFiles();
         ArrayList<String> list;
 
-        StatusPanel.progressCurrent.setMaximum(tableFieldFiles.length);
+        ExecuteStatusPanel.progressCurrent.setMaximum(tableFieldFiles.length);
         int progressValue = 0;
-        StatusPanel.progressCurrent.setValue(progressValue);
+        ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 
         for (File file : tableFieldFiles) {
 
             String fileName = file.getName();
             if (!fileName.endsWith(".sql")) {
                 progressValue++;
-                StatusPanel.progressCurrent.setValue(progressValue);
+                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 continue;
             } else {
                 list = new ArrayList<String>();
@@ -146,7 +146,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                     e.printStackTrace();
                 }
                 progressValue++;
-                StatusPanel.progressCurrent.setValue(progressValue);
+                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
             }
         }
 
@@ -273,7 +273,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
     public void backUp() {
         StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.startBackUp"), LogLevel.INFO);
 
-        StatusPanel.progressCurrent.setMaximum(100);
+        ExecuteStatusPanel.progressCurrent.setMaximum(100);
         String user = "";
         String password = "";
         try {
@@ -361,7 +361,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
 
                     String sqls[] = sqlBuff.toString().split(";");
 
-                    StatusPanel.progressCurrent.setMaximum(sqls.length);
+                    ExecuteStatusPanel.progressCurrent.setMaximum(sqls.length);
 
                     totalSqls = 0;// 总sql数
                     int affectedRecords = 0;// 受影响的结果行数
@@ -376,7 +376,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                             logger.warn("===" + string + ";===" + result);
                         }
                         progressValue++;
-                        StatusPanel.progressCurrent.setValue(progressValue);
+                        ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                     }
 
                     Writer writer = new FileWriter(logSqlFile, true);// 第二个参数:true表示在文件结尾追加
@@ -437,19 +437,19 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                     }
                 }
             } else {
-                StatusPanel.progressCurrent.setMaximum(sqlList.size());
+                ExecuteStatusPanel.progressCurrent.setMaximum(sqlList.size());
                 int progressValue = 0;
-                StatusPanel.progressCurrent.setValue(progressValue);
+                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 for (String string : sqlList) {
                     logger.debug("sqls:" + string);
                     progressValue++;
-                    StatusPanel.progressCurrent.setValue(progressValue);
+                    ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 }
 
             }
         } else {
-            StatusPanel.progressCurrent.setMaximum(1);
-            StatusPanel.progressCurrent.setValue(1);
+            ExecuteStatusPanel.progressCurrent.setMaximum(1);
+            ExecuteStatusPanel.progressCurrent.setValue(1);
             StatusLog.setLastTime(Utils.getCurrentTime());
             StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.runSqlFinish") + totalSqls, LogLevel.INFO);
             StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.syncFinish"), LogLevel.INFO);
@@ -460,40 +460,40 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
     }
 
     public void run() {
-        StatusPanel.isRunning = true;
+        ExecuteStatusPanel.isRunning = true;
         this.setName("ExecuteThread");
         long enterTime = System.currentTimeMillis(); // 毫秒数
-        StatusPanel.progressTotal.setMaximum(6);
+        ExecuteStatusPanel.progressTotal.setMaximum(6);
         // 初始化变量
         init();
         // 测试连接
         boolean isLinked = testLink();
         if (isLinked) {
-            StatusPanel.progressTotal.setValue(1);
+            ExecuteStatusPanel.progressTotal.setValue(1);
             // 分析配置文件
             boolean isAnalyseSuccess = analyseConfigFile();
             if (isAnalyseSuccess) {
-                StatusPanel.progressTotal.setValue(2);
+                ExecuteStatusPanel.progressTotal.setValue(2);
                 // 备份
                 if (true) {
                     backUp();
                 }
-                StatusPanel.progressTotal.setValue(3);
+                ExecuteStatusPanel.progressTotal.setValue(3);
                 // 建立新快照
                 boolean isSnapSuccess = newSnap();
                 if (isSnapSuccess) {
-                    StatusPanel.progressTotal.setValue(4);
+                    ExecuteStatusPanel.progressTotal.setValue(4);
                     // 对比快照,并根据对比结果生成SQL
                     boolean isDiffSuccess = diffSnap();
                     if (isDiffSuccess) {
-                        StatusPanel.progressTotal.setValue(5);
+                        ExecuteStatusPanel.progressTotal.setValue(5);
                         // 执行SQL
                         boolean isExecuteSuccess = executeSQL();
                         if (isExecuteSuccess) {
-                            StatusPanel.progressTotal.setValue(6);
+                            ExecuteStatusPanel.progressTotal.setValue(6);
 
                             // 恢复按钮状态
-                            if (!StatusPanel.buttonStartSchedule.isEnabled()) {
+                            if (!ExecuteStatusPanel.buttonStartSchedule.isEnabled()) {
                                 StatusLog.setStatus(PropertyUtil.getProperty("ds.logic.runScheduleing"));
                             } else {
                                 StatusLog.setStatus(PropertyUtil.getProperty("ds.logic.manuSyncFinish"));
@@ -531,8 +531,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
         } else {
         }
 
-        StatusPanel.buttonStartNow.setEnabled(true);
-        StatusPanel.buttonStartSchedule.setEnabled(true);
-        StatusPanel.isRunning = false;
+        ExecuteStatusPanel.buttonStartSchedule.setEnabled(true);
+        ExecuteStatusPanel.isRunning = false;
     }
 }

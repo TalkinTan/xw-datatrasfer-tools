@@ -4,7 +4,7 @@ import com.opencsv.CSVWriter;
 import com.xuanwu.datatransfer.logic.bean.Table;
 import com.xuanwu.datatransfer.logic.init.Init4pxp2p;
 import com.xuanwu.datatransfer.tools.*;
-import com.xuanwu.datatransfer.ui.panel.StatusPanel;
+import com.xuanwu.datatransfer.ui.panel.ExecuteStatusPanel;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -59,9 +59,9 @@ public class SnapManage {
 			e1.printStackTrace();
 			return isSuccess;
 		}
-		StatusPanel.progressCurrent.setMaximum(tableMap.keySet().size());
+		ExecuteStatusPanel.progressCurrent.setMaximum(tableMap.keySet().size());
 		int progressValue = 0;
-		StatusPanel.progressCurrent.setValue(progressValue);
+		ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 
 		// 遍历来源表Map，建立快照
 		for (String snapName : tableMap.keySet()) {
@@ -156,7 +156,7 @@ public class SnapManage {
 
 			}
 			progressValue++;
-			StatusPanel.progressCurrent.setValue(progressValue);
+			ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 		}
 
 		return isSuccess;
@@ -170,9 +170,9 @@ public class SnapManage {
 	 */
 	public static boolean diffSnap(Map<String, Table> tableMap) {
 		StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.startDiffSnap"), LogLevel.INFO);
-		StatusPanel.progressCurrent.setMaximum(tableMap.keySet().size());
+		ExecuteStatusPanel.progressCurrent.setMaximum(tableMap.keySet().size());
 		int progressValue = 0;
-		StatusPanel.progressCurrent.setValue(progressValue);
+		ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 		boolean isSuccess = true;
 		// 初始化目标sqlList
 		sqlList = new ArrayList<String>();
@@ -196,7 +196,7 @@ public class SnapManage {
 				}
 				if (snapMD5Before.equals(snapMD5Now)) {
 					progressValue++;
-					StatusPanel.progressCurrent.setValue(progressValue);
+					ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 					continue;
 				} else {
 					try {
@@ -218,7 +218,7 @@ public class SnapManage {
 				}
 			}
 			progressValue++;
-			StatusPanel.progressCurrent.setValue(progressValue);
+			ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 		}
 		StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.finishDiffSnap"), LogLevel.INFO);
 		return isSuccess;
@@ -322,12 +322,12 @@ public class SnapManage {
 			primKeyValuesSetNow.add(keyValues.toString());
 		}
 		if (snapBeforeList.size() > snapNowList.size()) {
-			StatusPanel.progressCurrent.setMaximum(snapBeforeList.size());
+			ExecuteStatusPanel.progressCurrent.setMaximum(snapBeforeList.size());
 		} else {
-			StatusPanel.progressCurrent.setMaximum(snapNowList.size());
+			ExecuteStatusPanel.progressCurrent.setMaximum(snapNowList.size());
 		}
 		int progressValue = 0;
-		StatusPanel.progressCurrent.setValue(progressValue);
+		ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 
 		for (int flagBefore = 1, flagNow = 1; flagBefore < snapBeforeList.size() || flagNow < snapNowList.size();) {
 
@@ -549,7 +549,7 @@ public class SnapManage {
 				}
 			}
 			progressValue++;
-			StatusPanel.progressCurrent.setValue(progressValue);
+			ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 		}
 		return isSuccess;
 	}
