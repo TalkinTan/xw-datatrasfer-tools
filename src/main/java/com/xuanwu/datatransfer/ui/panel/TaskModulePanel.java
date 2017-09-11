@@ -1,13 +1,17 @@
 package com.xuanwu.datatransfer.ui.panel;
 
-import com.xuanwu.datatransfer.tools.PropertyUtil;
-import com.xuanwu.datatransfer.ui.AppMainWindow;
 import com.xuanwu.datatransfer.ui.ConstantsUI;
+import com.xuanwu.datatransfer.ui.table.CheckHeaderCellRenderer;
+import com.xuanwu.datatransfer.ui.table.CheckTableModle;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Vector;
 
 /**
  * 模块任务面板
@@ -19,14 +23,12 @@ public class TaskModulePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    public static JPanel linkDatasourcePanel;
-    public static JPanel linkModulePanel;
+    public JTable moduleJTable;
 
-    public static JPanel panelRightContent;
+    public JPanel panelFilter;
+    public JButton btnFilter;
 
-    private static JPanel panelDatasource;
-    private static JPanel panelModule;
-
+    public JTextField filterField;
     /**
      * 构造
      */
@@ -37,127 +39,149 @@ public class TaskModulePanel extends JPanel {
     }
 
     /**
-     * 初始化面板
+     * 初始化
      */
     private void initialize() {
         this.setBackground(ConstantsUI.MAIN_BACK_COLOR);
         this.setLayout(new BorderLayout());
-
-        panelDatasource = new TaskDataSourcePanel();
-        panelModule = new TaskModulePanel();
     }
 
     /**
-     * 为面板添加组件
+     * 添加组件
      */
     private void addComponent() {
 
         this.add(getUpPanel(), BorderLayout.NORTH);
         this.add(getCenterPanel(), BorderLayout.CENTER);
+        //this.add(getDownPanel(), BorderLayout.SOUTH);
 
     }
 
-    /**
-     * 面板上部
-     *
-     * @return
-     */
-    private JPanel getUpPanel() {
-        JPanel panelUp = new JPanel();
-        panelUp.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelUp.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 5));
+    public JPanel getUpPanel() {
+        panelFilter = new JPanel();
+        panelFilter.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panelFilter.setBackground(ConstantsUI.MAIN_BACK_COLOR);
 
-        JLabel labelTitle = new JLabel(PropertyUtil.getProperty("ds.ui.taskchoise.title"));
-        labelTitle.setFont(ConstantsUI.FONT_TITLE);
-        labelTitle.setForeground(ConstantsUI.TOOL_BAR_BACK_COLOR);
-        panelUp.add(labelTitle);
+        JLabel filterNameLabel = new JLabel("过滤:");
+        filterNameLabel.setPreferredSize(new Dimension(30, 30));
+        filterField = new JTextField();
+        filterField.setPreferredSize(new Dimension(200, 24));
 
-        return panelUp;
+        panelFilter.add(filterNameLabel);
+        panelFilter.add(filterField);
+
+        btnFilter = new JButton("搜索");
+        btnFilter.setPreferredSize(new Dimension(50, 24));
+        panelFilter.add(btnFilter);
+
+        return panelFilter;
     }
 
+
     /**
-     * 面板中部
+     * 中部面板
      *
      * @return
      */
     private JPanel getCenterPanel() {
-        // 中间面板
-        JPanel panelCenter = new JPanel();
-        panelCenter.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelCenter.setLayout(new BorderLayout());
+        JPanel tablePanel = new JPanel();
 
-        // 数据库列表Panel
-        JPanel panelList = new JPanel();
-        Dimension preferredSize = new Dimension(160, ConstantsUI.MAIN_WINDOW_HEIGHT);
-        panelList.setPreferredSize(preferredSize);
-        panelList.setBackground(new Color(62, 62, 62));
-        panelList.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        tablePanel.setBackground(ConstantsUI.MAIN_BACK_COLOR);
+        tablePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        tablePanel.setLayout(new BorderLayout(0, 0));
 
-        linkDatasourcePanel = new JPanel();
-        linkDatasourcePanel.setBackground(new Color(69, 186, 121));
-        linkDatasourcePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 13));
-        Dimension preferredSizeListItem = new Dimension(245, 48);
-        linkDatasourcePanel.setPreferredSize(preferredSizeListItem);
-        linkModulePanel = new JPanel();
-        linkModulePanel.setBackground(ConstantsUI.TOOL_BAR_BACK_COLOR);
-        linkModulePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 13));
-        linkModulePanel.setPreferredSize(preferredSizeListItem);
+        moduleJTable = new JTable();
+        JScrollPane scrollPane = new JScrollPane(moduleJTable,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        tablePanel.add(scrollPane, BorderLayout.CENTER);
 
-        JLabel labelFrom = new JLabel(PropertyUtil.getProperty("ds.ui.taskchoise.datasourcetitle"));
-        JLabel labelTo = new JLabel(PropertyUtil.getProperty("ds.ui.taskchoise.moduletitle"));
-        Font fontListItem = new Font(PropertyUtil.getProperty("ds.ui.font.family"), 0, 15);
-        labelFrom.setFont(fontListItem);
-        labelTo.setFont(fontListItem);
-        labelFrom.setForeground(Color.white);
-        labelTo.setForeground(Color.white);
-        linkDatasourcePanel.add(labelFrom);
-        linkModulePanel.add(labelTo);
+        //初始化数据
+        initTable();
 
-        panelList.add(linkDatasourcePanel);
-        panelList.add(linkModulePanel);
+        return tablePanel;
+    }
 
-        // 数据库设置Panel
-        panelRightContent = new JPanel();
-        panelRightContent.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelRightContent.setLayout(new BorderLayout());
-        panelRightContent.add(panelDatasource);
+    private void initTable() {
+        Vector headerNames = new Vector();
+        headerNames.add("全选");
+        headerNames.add("模块名称");
+        headerNames.add("模块ID");
 
-        panelCenter.add(panelList, BorderLayout.WEST);
-        panelCenter.add(panelRightContent, BorderLayout.CENTER);
-
-        return panelCenter;
+        Vector data = this.getData();
+        CheckTableModle tableModel = new CheckTableModle(data, headerNames);
+        moduleJTable.setModel(tableModel);
+        moduleJTable.getTableHeader().setDefaultRenderer(new CheckHeaderCellRenderer(moduleJTable));
     }
 
     /**
-     * 添加相关组件的事件监听
+     * 获得数据
+     *
+     * @return
      */
-    private void addListener() {
-        linkDatasourcePanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                linkDatasourcePanel.setBackground(new Color(69, 186, 121));
-                linkModulePanel.setBackground(ConstantsUI.TOOL_BAR_BACK_COLOR);
+    private Vector getData() {
+        Vector data = new Vector();
+        Vector rowVector1 = new Vector();
+        rowVector1.add(true);
+        rowVector1.add("模块1");
+        rowVector1.add("25");
 
-                TaskChoisePanel.panelRightContent.removeAll();
-                TaskChoisePanel.panelRightContent.add(panelDatasource);
-                AppMainWindow.panelTaskChoise.updateUI();
+        Vector rowVector2 = new Vector();
+        rowVector2.add(false);
+        rowVector2.add("模块2");
+        rowVector2.add("26");
 
-            }
-        });
+        Vector rowVector3 = new Vector();
+        rowVector3.add(false);
+        rowVector3.add("模块3");
+        rowVector3.add("1");
 
-        linkModulePanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                linkModulePanel.setBackground(new Color(69, 186, 121));
-                linkDatasourcePanel.setBackground(ConstantsUI.TOOL_BAR_BACK_COLOR);
+        Vector rowVector4 = new Vector();
+        rowVector4.add(false);
+        rowVector4.add("中文的过滤");
+        rowVector4.add("备注信息");
 
-                TaskChoisePanel.panelRightContent.removeAll();
-                TaskChoisePanel.panelRightContent.add(panelModule);
-                AppMainWindow.panelTaskChoise.updateUI();
 
-            }
-        });
+        //for(int i=1;i<100;i++) {
 
+        data.add(rowVector1);
+        data.add(rowVector2);
+        data.add(rowVector3);
+        data.add(rowVector4);
+        //}
+
+        return data;
     }
 
+
+    /**
+     * 为相关组件添加事件监听
+     */
+    private void addListener() {
+
+        btnFilter.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                TableRowSorter<TableModel> sorter = (TableRowSorter<TableModel>) moduleJTable.getRowSorter();
+                if(sorter == null) {
+                    sorter = new TableRowSorter<>(moduleJTable.getModel());
+                    moduleJTable.setRowSorter(sorter);
+                }
+
+                String text = filterField.getText();
+
+                if (text.length() == 0) {
+                    sorter.setRowFilter(null);
+                } else {
+                    //设置RowFilter 用于从模型中过滤条目，使得这些条目不会在视图中显示
+                    sorter.setRowFilter(RowFilter.regexFilter(text));
+                }
+
+            }
+        });
+
+
+
+    }
 }

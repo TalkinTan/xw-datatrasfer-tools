@@ -1,56 +1,42 @@
 package com.xuanwu.datatransfer.ui.panel;
 
+import com.xuanwu.datatransfer.bean.IdName;
 import com.xuanwu.datatransfer.logic.ScheduleExecuteThread;
 import com.xuanwu.datatransfer.tools.PropertyUtil;
 import com.xuanwu.datatransfer.tools.StatusLog;
 import com.xuanwu.datatransfer.ui.ConstantsUI;
 import com.xuanwu.datatransfer.ui.MyIconButton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Iterator;
+import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- *  执行状态面板（步骤三）
+ * 执行状态面板（步骤三）
  *
- * @Author：ttan
- * 日期：2017-09-11
+ * @Author：ttan 日期：2017-09-11
  */
 public class ExecuteStatusPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = LoggerFactory.getLogger(ExecuteStatusPanel.class);
 
     public static MyIconButton buttonStartSchedule;
     public static MyIconButton buttonStop;
 
+    public static JPanel panelCenter;
+    public static JScrollPane jscroll;
+
+    public static JTextArea detailTextArea;
     public static JProgressBar progressTotal;
-    public static JProgressBar progressCurrent;
 
     public static JLabel labelStatus;
     public static JLabel labelStatusDetail;
-    public static JLabel labelFrom;
-    public static JLabel labelTo;
-    public static JLabel labelLastTime;
-    public static JLabel labelKeepTime;
-    public static JLabel labelNextTime;
-    public static JLabel labelSuccess;
-    public static JLabel labelFail;
-    private static JLabel labelLog;
 
     private static ScheduledExecutorService service;
 
@@ -63,7 +49,9 @@ public class ExecuteStatusPanel extends JPanel {
         super(true);
         initialize();
         addComponent();
-        setContent();
+
+        //在点击页面时，才触发事件
+        //setContent();
         addListener();
     }
 
@@ -111,9 +99,9 @@ public class ExecuteStatusPanel extends JPanel {
      */
     private JPanel getCenterPanel() {
         // 中间面板
-        JPanel panelCenter = new JPanel();
+        panelCenter = new JPanel();
         panelCenter.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelCenter.setLayout(new GridLayout(4, 1));
+        panelCenter.setLayout(new BorderLayout());
 
         // 状态Grid
         JPanel panelGridStatus = new JPanel();
@@ -131,92 +119,51 @@ public class ExecuteStatusPanel extends JPanel {
         panelGridStatus.add(labelStatus);
         panelGridStatus.add(labelStatusDetail);
 
-        // 来源/目标 Grid
-        JPanel panelGridFromTo = new JPanel();
-        panelGridFromTo.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelGridFromTo.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 0));
 
-        labelFrom = new JLabel();
-        labelTo = new JLabel();
-        labelFrom.setFont(ConstantsUI.FONT_NORMAL);
-        labelTo.setFont(ConstantsUI.FONT_NORMAL);
-        labelFrom.setPreferredSize(ConstantsUI.LABLE_SIZE);
-        labelTo.setPreferredSize(ConstantsUI.LABLE_SIZE);
+        //详细配置信息
+        JPanel transferDetailPanel = new JPanel();
+        transferDetailPanel.setBackground(ConstantsUI.MAIN_BACK_COLOR);
+        transferDetailPanel.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 0));
 
-        panelGridFromTo.add(labelFrom);
-        panelGridFromTo.add(labelTo);
 
-        // 详情Grid
-        JPanel panelGridDetail = new JPanel();
-        panelGridDetail.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelGridDetail.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 0));
+        detailTextArea = new JTextArea();
+        detailTextArea.setPreferredSize(new Dimension(780, 420));
+        detailTextArea.setSelectedTextColor(Color.RED);
+        detailTextArea.setLineWrap(true);        //激活自动换行功能
+        detailTextArea.setWrapStyleWord(true);            // 激活断行不断字功能
 
-        labelLastTime = new JLabel();
-        labelKeepTime = new JLabel();
-        labelNextTime = new JLabel();
-        labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime"));
-        labelSuccess = new JLabel();
-        labelFail = new JLabel();
-        labelLog = new JLabel(PropertyUtil.getProperty("ds.ui.status.logDetail"));
+        jscroll = new JScrollPane();
 
-        labelLastTime.setFont(ConstantsUI.FONT_NORMAL);
-        labelKeepTime.setFont(ConstantsUI.FONT_NORMAL);
-        labelNextTime.setFont(ConstantsUI.FONT_NORMAL);
-        labelSuccess.setFont(ConstantsUI.FONT_NORMAL);
-        labelFail.setFont(ConstantsUI.FONT_NORMAL);
-        labelLog.setFont(ConstantsUI.FONT_NORMAL);
-        labelLastTime.setPreferredSize(new Dimension(240, 30));
-        labelKeepTime.setPreferredSize(new Dimension(300, 30));
-        labelNextTime.setPreferredSize(ConstantsUI.LABLE_SIZE);
-        labelSuccess.setPreferredSize(new Dimension(240, 30));
-        labelFail.setPreferredSize(new Dimension(236, 30));
-        labelLog.setPreferredSize(ConstantsUI.LABLE_SIZE);
-        labelLog.setForeground(ConstantsUI.TOOL_BAR_BACK_COLOR);
+        jscroll.setViewportView(detailTextArea);
+        jscroll.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        jscroll.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        panelGridDetail.add(labelLastTime);
-        panelGridDetail.add(labelKeepTime);
-        panelGridDetail.add(labelNextTime);
-        panelGridDetail.add(labelSuccess);
-        panelGridDetail.add(labelFail);
-        panelGridDetail.add(labelLog);
+        transferDetailPanel.add(jscroll);
+
 
         // 进度Grid
-        JPanel panelGridProgress = new JPanel();
-        panelGridProgress.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelGridProgress.setLayout(new GridLayout(2, 1, ConstantsUI.MAIN_H_GAP, 0));
-        JPanel panelCurrentProgress = new JPanel();
-        panelCurrentProgress.setBackground(ConstantsUI.MAIN_BACK_COLOR);
-        panelCurrentProgress.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 20));
         JPanel panelTotalProgress = new JPanel();
         panelTotalProgress.setBackground(ConstantsUI.MAIN_BACK_COLOR);
         panelTotalProgress.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 0));
 
-        JLabel labelCurrent = new JLabel(PropertyUtil.getProperty("ds.ui.status.progress.current"));
         JLabel labelTotal = new JLabel(PropertyUtil.getProperty("ds.ui.status.progress.total"));
-        labelCurrent.setFont(ConstantsUI.FONT_NORMAL);
         labelTotal.setFont(ConstantsUI.FONT_NORMAL);
-        progressCurrent = new JProgressBar();
         progressTotal = new JProgressBar();
 
         Dimension preferredSizeLabel = new Dimension(80, 30);
-        labelCurrent.setPreferredSize(preferredSizeLabel);
         labelTotal.setPreferredSize(preferredSizeLabel);
-        Dimension preferredSizeProgressbar = new Dimension(640, 20);
-        progressCurrent.setPreferredSize(preferredSizeProgressbar);
+        Dimension preferredSizeProgressbar = new Dimension(680, 20);
         progressTotal.setPreferredSize(preferredSizeProgressbar);
 
-        panelCurrentProgress.add(labelCurrent);
-        panelCurrentProgress.add(progressCurrent);
         panelTotalProgress.add(labelTotal);
         panelTotalProgress.add(progressTotal);
 
-        panelGridProgress.add(panelCurrentProgress);
-        panelGridProgress.add(panelTotalProgress);
 
-        panelCenter.add(panelGridStatus);
-        panelCenter.add(panelGridFromTo);
-        panelCenter.add(panelGridDetail);
-        panelCenter.add(panelGridProgress);
+        panelCenter.add(panelGridStatus, BorderLayout.NORTH);
+        panelCenter.add(transferDetailPanel, BorderLayout.CENTER);
+        panelCenter.add(panelTotalProgress, BorderLayout.SOUTH);
 
         return panelCenter;
     }
@@ -247,19 +194,51 @@ public class ExecuteStatusPanel extends JPanel {
     }
 
     /**
-     * 设置状态面板组件内容
+     * 设置显示内容
      */
     public static void setContent() {
+        Vector<IdName> selectDatasourceList = TaskDataSourcePanel.dataSourceJTable.getSelectedData();
 
-        labelFrom.setText(
-                PropertyUtil.getProperty("ds.ui.status.from"));
-        labelTo.setText(PropertyUtil.getProperty("ds.ui.status.to"));
-        labelLastTime.setText(PropertyUtil.getProperty("ds.ui.status.lastSync"));
-        labelKeepTime.setText(PropertyUtil.getProperty("ds.ui.status.keepTime"));
+        detailTextArea.setText("=========================>数据源迁移" + "\n");
+        detailTextArea.setText(detailTextArea.getText() + showDetail(selectDatasourceList));
+        detailTextArea.setText(detailTextArea.getText() + "\n");
 
-        labelSuccess.setText(PropertyUtil.getProperty("ds.ui.status.successTimes"));
-        labelFail.setText(PropertyUtil.getProperty("ds.ui.status.failTimes"));
 
+        int height = 20;
+        Point p = new Point();
+        p.setLocation(0, detailTextArea.getLineCount() * height);
+        jscroll.getViewport().setViewPosition(p);
+        jscroll.updateUI();
+    }
+
+
+    /**
+     * 显示详情
+     *
+     * @param idNames
+     * @return
+     */
+    public static String showDetail(Vector<IdName> idNames) {
+
+        if (idNames == null || idNames.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        Iterator<IdName> its = idNames.iterator();
+
+        IdName in = its.next();
+        sb.append("ID 为 " + in.getId() + "," + "名称为:" + in.getName());
+
+        while (its.hasNext()) {
+            IdName in2 = its.next();
+            sb.append("\n");
+            sb.append("ID 为 " + in2.getId() + "," + "名称为:" + in2.getName());
+        }
+
+
+        return sb.toString();
     }
 
     /**
@@ -276,7 +255,6 @@ public class ExecuteStatusPanel extends JPanel {
                 ExecuteStatusPanel.setContent();
 
                 ExecuteStatusPanel.progressTotal.setValue(0);
-                ExecuteStatusPanel.progressCurrent.setValue(0);
                 labelStatus.setText(PropertyUtil.getProperty("ds.ui.status.scheduledRunning"));
                 ScheduleExecuteThread syncThread = new ScheduleExecuteThread();
                 service = Executors.newSingleThreadScheduledExecutor();
@@ -321,59 +299,7 @@ public class ExecuteStatusPanel extends JPanel {
                 buttonStop.setEnabled(false);
             }
         });
-        labelLog.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                labelLog.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().open(new File(ConstantsUI.CURRENT_DIR + File.separator + "log"));
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    logger.error(e1.toString());
-                }
-            }
-        });
     }
 
-    /**
-     * 获取指定时间对应的毫秒数
-     *
-     * @param time "HH:mm:ss"
-     * @return
-     */
-    private static long getTimeMillis(String time) {
-        try {
-            DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-            DateFormat dayFormat = new SimpleDateFormat("yy-MM-dd");
-            Date curDate = dateFormat.parse(dayFormat.format(new Date()) + " " + time);
-            return curDate.getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
 
 }

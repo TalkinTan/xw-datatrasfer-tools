@@ -70,7 +70,7 @@ public class StatusLog {
      * @param nextTime
      */
     public static void setNextTime(String nextTime) {
-        ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + nextTime);
+        //ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + nextTime);
     }
 
     /**

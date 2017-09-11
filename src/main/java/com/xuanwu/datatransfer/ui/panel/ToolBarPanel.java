@@ -21,8 +21,8 @@ public class ToolBarPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private static MyIconButton buttonDbConnect;
-	private static MyIconButton buttonExecuteInfo;
 	private static MyIconButton buttonTaskChoise;
+	private static MyIconButton buttonExecuteInfo;
 
 	/**
 	 * 构造
@@ -95,23 +95,6 @@ public class ToolBarPanel extends JPanel {
 		});
 
 
-		buttonExecuteInfo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				buttonDbConnect.setIcon(ConstantsUI.ICON_STATUS);
-				buttonExecuteInfo.setIcon(ConstantsUI.ICON_SCHEDULE_ENABLE);
-				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
-
-				AppMainWindow.mainPanelCenter.removeAll();
-				ExecuteStatusPanel.setContent();
-				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelExecuteStatus, BorderLayout.CENTER);
-
-				AppMainWindow.mainPanelCenter.updateUI();
-
-			}
-		});
 
 		buttonTaskChoise.addActionListener(new ActionListener() {
 
@@ -125,6 +108,27 @@ public class ToolBarPanel extends JPanel {
 				AppMainWindow.mainPanelCenter.removeAll();
 				DatabasePanelFrom.setContent();
 				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelTaskChoise, BorderLayout.CENTER);
+
+				AppMainWindow.mainPanelCenter.updateUI();
+
+			}
+		});
+
+
+		buttonExecuteInfo.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				buttonDbConnect.setIcon(ConstantsUI.ICON_STATUS);
+				buttonExecuteInfo.setIcon(ConstantsUI.ICON_SCHEDULE_ENABLE);
+				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
+
+				AppMainWindow.mainPanelCenter.removeAll();
+				ExecuteStatusPanel.setContent();
+				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelExecuteStatus, BorderLayout.CENTER);
+				//点击时，再去设置detail Info
+				ExecuteStatusPanel.setContent();
 
 				AppMainWindow.mainPanelCenter.updateUI();
 

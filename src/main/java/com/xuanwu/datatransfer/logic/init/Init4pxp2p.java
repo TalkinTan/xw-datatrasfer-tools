@@ -1,6 +1,5 @@
 package com.xuanwu.datatransfer.logic.init;
 
-import com.xuanwu.datatransfer.ui.panel.ExecuteStatusPanel;
 import com.opencsv.CSVWriter;
 import com.xuanwu.datatransfer.tools.DbUtilMySQL;
 import com.xuanwu.datatransfer.tools.DbUtilSQLServer;
@@ -20,9 +19,7 @@ public class Init4pxp2p {
         CSVWriter csvWriterRole = null;
         CSVWriter csvWriterUser = null;
         File snapsDir = null;
-        ExecuteStatusPanel.progressCurrent.setMaximum(7);
         int progressValue = 0;
-        ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 
 		/*Do Sth you need to init*/
         return isSuccess;

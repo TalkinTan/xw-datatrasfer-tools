@@ -47,18 +47,18 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
      */
     public boolean testLink() {
         StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.testLinking"), LogLevel.INFO);
-        ExecuteStatusPanel.progressCurrent.setMaximum(2);
-        ExecuteStatusPanel.progressCurrent.setValue(0);
+        //ExecuteStatusPanel.progressCurrent.setMaximum(2);
+        //ExecuteStatusPanel.progressCurrent.setValue(0);
         boolean isLinkedPass = true;
         DbUtilSQLServer dbSQLServer = null;
         DbUtilMySQL dbMySQL = null;
         try {
             dbSQLServer = DbUtilSQLServer.getInstance();
             Connection connSQLServer = dbSQLServer.testConnection();
-            ExecuteStatusPanel.progressCurrent.setValue(1);
+            //ExecuteStatusPanel.progressCurrent.setValue(1);
             dbMySQL = DbUtilMySQL.getInstance();
             Connection connMySQL = dbMySQL.testConnection();
-            ExecuteStatusPanel.progressCurrent.setValue(2);
+            //ExecuteStatusPanel.progressCurrent.setValue(2);
             if (connSQLServer == null) {
                 isLinkedPass = false;
                 StatusLog.setStatusDetail("SQLServer " + PropertyUtil.getProperty("ds.logic.testLinkFail"), LogLevel.ERROR);
@@ -118,16 +118,16 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
         File tableFieldFiles[] = tableFieldDir.listFiles();
         ArrayList<String> list;
 
-        ExecuteStatusPanel.progressCurrent.setMaximum(tableFieldFiles.length);
+        //ExecuteStatusPanel.progressCurrent.setMaximum(tableFieldFiles.length);
         int progressValue = 0;
-        ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+        //ExecuteStatusPanel.progressCurrent.setValue(progressValue);
 
         for (File file : tableFieldFiles) {
 
             String fileName = file.getName();
             if (!fileName.endsWith(".sql")) {
                 progressValue++;
-                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+          //      ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 continue;
             } else {
                 list = new ArrayList<String>();
@@ -146,7 +146,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                     e.printStackTrace();
                 }
                 progressValue++;
-                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+               // ExecuteStatusPanel.progressCurrent.setValue(progressValue);
             }
         }
 
@@ -273,7 +273,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
     public void backUp() {
         StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.startBackUp"), LogLevel.INFO);
 
-        ExecuteStatusPanel.progressCurrent.setMaximum(100);
+        //ExecuteStatusPanel.progressCurrent.setMaximum(100);
         String user = "";
         String password = "";
         try {
@@ -361,7 +361,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
 
                     String sqls[] = sqlBuff.toString().split(";");
 
-                    ExecuteStatusPanel.progressCurrent.setMaximum(sqls.length);
+                   // ExecuteStatusPanel.progressCurrent.setMaximum(sqls.length);
 
                     totalSqls = 0;// 总sql数
                     int affectedRecords = 0;// 受影响的结果行数
@@ -376,7 +376,7 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                             logger.warn("===" + string + ";===" + result);
                         }
                         progressValue++;
-                        ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+                     //   ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                     }
 
                     Writer writer = new FileWriter(logSqlFile, true);// 第二个参数:true表示在文件结尾追加
@@ -437,19 +437,19 @@ public class ExecuteThread extends Thread implements ExecuteThreadInterface {
                     }
                 }
             } else {
-                ExecuteStatusPanel.progressCurrent.setMaximum(sqlList.size());
+               // ExecuteStatusPanel.progressCurrent.setMaximum(sqlList.size());
                 int progressValue = 0;
-                ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+               // ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 for (String string : sqlList) {
                     logger.debug("sqls:" + string);
                     progressValue++;
-                    ExecuteStatusPanel.progressCurrent.setValue(progressValue);
+                 //   ExecuteStatusPanel.progressCurrent.setValue(progressValue);
                 }
 
             }
         } else {
-            ExecuteStatusPanel.progressCurrent.setMaximum(1);
-            ExecuteStatusPanel.progressCurrent.setValue(1);
+           // ExecuteStatusPanel.progressCurrent.setMaximum(1);
+           // ExecuteStatusPanel.progressCurrent.setValue(1);
             StatusLog.setLastTime(Utils.getCurrentTime());
             StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.runSqlFinish") + totalSqls, LogLevel.INFO);
             StatusLog.setStatusDetail(PropertyUtil.getProperty("ds.logic.syncFinish"), LogLevel.INFO);

@@ -78,7 +78,7 @@ public class ScheduleExecuteThread extends ExecuteThread {
 
             }
             // 设置显示下一次执行时间
-            ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + Utils.getNextSyncTime());
+            //ExecuteStatusPanel.labelNextTime.setText(PropertyUtil.getProperty("ds.ui.schedule.nextTime") + Utils.getNextSyncTime());
             ExecuteStatusPanel.isRunning = false;
         }
     }
