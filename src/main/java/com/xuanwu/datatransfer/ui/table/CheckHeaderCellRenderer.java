@@ -8,6 +8,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * 表头渲染器
+ *
+ * @Author：ttan
+ * 日期：2017-09-11
+ */
 public class CheckHeaderCellRenderer implements TableCellRenderer {
     CheckTableModle tableModel;
     JTableHeader tableHeader;

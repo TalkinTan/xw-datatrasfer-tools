@@ -3,6 +3,12 @@ package com.xuanwu.datatransfer.ui.table;
 import javax.swing.table.DefaultTableModel;
 import java.util.Vector;
 
+/**
+ * JTable Model
+ *
+ * @Author：ttan
+ * 日期：2017-09-11
+ */
 public class CheckTableModle extends DefaultTableModel {
 
     public CheckTableModle(Vector data, Vector columnNames) {

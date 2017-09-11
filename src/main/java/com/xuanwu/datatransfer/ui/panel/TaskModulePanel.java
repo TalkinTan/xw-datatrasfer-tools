@@ -11,6 +11,9 @@ import java.awt.event.MouseEvent;
 
 /**
  * 模块任务面板
+ *
+ * @Author：ttan
+ * 日期：2017-09-11
  */
 public class TaskModulePanel extends JPanel {
 
