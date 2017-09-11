@@ -10,10 +10,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * 数据库设置面板
- * 
- * @author Bob
+ * 处理任务选择面板（步骤二）
  *
+ * @Author：ttan
+ * 日期：2017-09-11
  */
 public class TaskChoisePanel extends JPanel {
 

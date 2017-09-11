@@ -8,9 +8,10 @@ import java.awt.*;
 
 
 /**
- * 数据连接信息Panel
+ *  数据库链接信息（步骤一）
  *
- * @author Bob
+ * @Author：ttan
+ * 日期：2017-09-11
  */
 public class DBConnectInfoPanel extends JPanel {
 

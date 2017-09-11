@@ -25,9 +25,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 状态面板
+ *  执行状态面板（步骤三）
  *
- * @author Bob
+ * @Author：ttan
+ * 日期：2017-09-11
  */
 public class ExecuteStatusPanel extends JPanel {
 

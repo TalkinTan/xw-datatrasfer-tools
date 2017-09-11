@@ -14,7 +14,10 @@ import java.awt.event.MouseEvent;
 import java.util.Vector;
 
 /**
- * 数据源Task
+ *  数据源面板
+ *
+ * @Author：ttan
+ * 日期：2017-09-11
  */
 public class TaskDataSourcePanel extends JPanel {
 

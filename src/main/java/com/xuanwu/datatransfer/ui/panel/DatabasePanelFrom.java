@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 
 /**
- * 来源数据库面板
+ * 源数据库面板
  * 
  * @author Bob
  *
