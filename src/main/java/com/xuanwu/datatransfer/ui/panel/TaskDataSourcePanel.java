@@ -133,12 +133,18 @@ public class TaskDataSourcePanel extends JPanel {
         rowVector3.add("YOYO");
         rowVector3.add("1");
 
+        Vector rowVector4 = new Vector();
+        rowVector4.add(false);
+        rowVector4.add("中文的过滤");
+        rowVector4.add("备注信息");
+
 
         //for(int i=1;i<100;i++) {
 
         data.add(rowVector1);
         data.add(rowVector2);
         data.add(rowVector3);
+        data.add(rowVector4);
         //}
 
         return data;
