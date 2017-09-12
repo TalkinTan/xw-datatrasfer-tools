@@ -9,15 +9,14 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 /**
  * 模块任务面板
  *
- * @Author：ttan
- * 日期：2017-09-11
+ * @Author：ttan 日期：2017-09-11
  */
 public class TaskModulePanel extends JPanel {
 
@@ -29,6 +28,7 @@ public class TaskModulePanel extends JPanel {
     public JButton btnFilter;
 
     public JTextField filterField;
+
     /**
      * 构造
      */
@@ -159,12 +159,20 @@ public class TaskModulePanel extends JPanel {
      */
     private void addListener() {
 
-        btnFilter.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
 
+        filterField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnFilter.doClick();
+            }
+        });
+
+
+        btnFilter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 TableRowSorter<TableModel> sorter = (TableRowSorter<TableModel>) moduleJTable.getRowSorter();
-                if(sorter == null) {
+                if (sorter == null) {
                     sorter = new TableRowSorter<>(moduleJTable.getModel());
                     moduleJTable.setRowSorter(sorter);
                 }
@@ -180,7 +188,6 @@ public class TaskModulePanel extends JPanel {
 
             }
         });
-
 
 
     }

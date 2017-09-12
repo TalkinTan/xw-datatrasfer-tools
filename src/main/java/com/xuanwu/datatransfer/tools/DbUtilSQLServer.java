@@ -137,7 +137,6 @@ public class DbUtilSQLServer {
 	public synchronized Connection testConnection(String DBUrl, String DBName, String DBUser, String DBPassword)
 			throws SQLException {
 		loadConfig();
-		// "jdbc:sqlserver://20.1.1.194:1433;DatabaseName=AIS20151221115438;"
 		connection = DriverManager.getConnection("jdbc:sqlserver://" + DBUrl + ";DatabaseName=" + DBName, DBUser,
 				DBPassword);
 		// 把事务提交方式改为手工提交

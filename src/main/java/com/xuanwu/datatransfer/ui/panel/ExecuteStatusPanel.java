@@ -127,10 +127,11 @@ public class ExecuteStatusPanel extends JPanel {
 
 
         detailTextArea = new JTextArea();
-        detailTextArea.setPreferredSize(new Dimension(780, 420));
+        //注释掉，直接采用jscroll的大小来限定，不然没法显示滚动条
+        //detailTextArea.setPreferredSize(new Dimension(780, 420));
         detailTextArea.setSelectedTextColor(Color.RED);
-        detailTextArea.setLineWrap(true);        //激活自动换行功能
-        detailTextArea.setWrapStyleWord(true);            // 激活断行不断字功能
+        //detailTextArea.setLineWrap(true);        //激活自动换行功能
+        //detailTextArea.setWrapStyleWord(true);            // 激活断行不断字功能
 
         jscroll = new JScrollPane();
 
@@ -139,6 +140,7 @@ public class ExecuteStatusPanel extends JPanel {
                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jscroll.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        jscroll.setPreferredSize(new Dimension(780,420));
 
         transferDetailPanel.add(jscroll);
 
@@ -199,7 +201,7 @@ public class ExecuteStatusPanel extends JPanel {
     public static void setContent() {
         Vector<IdName> selectDatasourceList = TaskDataSourcePanel.dataSourceJTable.getSelectedData();
 
-        detailTextArea.setText("=========================>数据源迁移" + "\n");
+        detailTextArea.setText(String.format(ConstantsUI.EXECUTE_INFO,"数据源迁移")+ "\n");
         detailTextArea.setText(detailTextArea.getText() + showDetail(selectDatasourceList));
         detailTextArea.setText(detailTextArea.getText() + "\n");
 
@@ -252,7 +254,6 @@ public class ExecuteStatusPanel extends JPanel {
 
                 buttonStartSchedule.setEnabled(false);
                 buttonStop.setEnabled(true);
-                ExecuteStatusPanel.setContent();
 
                 ExecuteStatusPanel.progressTotal.setValue(0);
                 labelStatus.setText(PropertyUtil.getProperty("ds.ui.status.scheduledRunning"));

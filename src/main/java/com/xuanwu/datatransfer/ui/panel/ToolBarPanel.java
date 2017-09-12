@@ -59,9 +59,9 @@ public class ToolBarPanel extends JPanel {
 
 
 		buttonDbConnect = new MyIconButton(ConstantsUI.ICON_STATUS_ENABLE, ConstantsUI.ICON_STATUS_ENABLE,
-				ConstantsUI.ICON_STATUS, PropertyUtil.getProperty("ds.ui.status.title"));
+				ConstantsUI.ICON_STATUS, "数据库连接");
 		buttonTaskChoise = new MyIconButton(ConstantsUI.ICON_DATABASE, ConstantsUI.ICON_DATABASE_ENABLE,
-				ConstantsUI.ICON_DATABASE, PropertyUtil.getProperty("ds.ui.database.title"));
+				ConstantsUI.ICON_DATABASE, "选择备份任务");
 		buttonExecuteInfo = new MyIconButton(ConstantsUI.ICON_SCHEDULE, ConstantsUI.ICON_SCHEDULE_ENABLE,
 				ConstantsUI.ICON_SCHEDULE, PropertyUtil.getProperty("ds.ui.schedule.title"));
 
@@ -86,7 +86,6 @@ public class ToolBarPanel extends JPanel {
 				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
 
 				AppMainWindow.mainPanelCenter.removeAll();
-				ExecuteStatusPanel.setContent();
 				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelDBConnectionInfo, BorderLayout.CENTER);
 
 				AppMainWindow.mainPanelCenter.updateUI();
@@ -106,7 +105,7 @@ public class ToolBarPanel extends JPanel {
 				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE_ENABLE);
 
 				AppMainWindow.mainPanelCenter.removeAll();
-				DatabasePanelFrom.setContent();
+				DatabaseConfigPanel.setContent();
 				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelTaskChoise, BorderLayout.CENTER);
 
 				AppMainWindow.mainPanelCenter.updateUI();
@@ -125,7 +124,6 @@ public class ToolBarPanel extends JPanel {
 				buttonTaskChoise.setIcon(ConstantsUI.ICON_DATABASE);
 
 				AppMainWindow.mainPanelCenter.removeAll();
-				ExecuteStatusPanel.setContent();
 				AppMainWindow.mainPanelCenter.add(AppMainWindow.panelExecuteStatus, BorderLayout.CENTER);
 				//点击时，再去设置detail Info
 				ExecuteStatusPanel.setContent();

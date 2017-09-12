@@ -16,7 +16,6 @@ public class ConstantsUI {
      * 软件名称,版本
      */
     public final static String APP_NAME = "SFA-实施数据传输工具";
-    public final static String APP_VERSION = "V1.0";
 
     /**
      * 主窗口大小
@@ -220,5 +219,7 @@ public class ConstantsUI {
     public final static Dimension RADIO_SIZE = new Dimension(1300, 60);
     // 高级选项面板Item 大小
     public final static Dimension PANEL_ITEM_SIZE = new Dimension(1300, 40);
+
+    public final static String EXECUTE_INFO = "============================>%s<============================";
 
 }

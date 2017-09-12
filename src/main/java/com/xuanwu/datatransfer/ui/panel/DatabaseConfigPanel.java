@@ -21,7 +21,7 @@ import java.sql.Connection;
  * @author Bob
  *
  */
-public class DatabasePanelFrom extends JPanel {
+public class DatabaseConfigPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -32,12 +32,17 @@ public class DatabasePanelFrom extends JPanel {
 	private static JTextField textFieldDatabaseUser;
 	private static JPasswordField passwordFieldDatabasePassword;
 
-	private static final Logger logger = LoggerFactory.getLogger(DatabasePanelFrom.class);
+
+	private static JTextField choosePathJTextField;
+	private static JFileChooser jFileChooser;
+	private static JButton chooseBtn;
+
+	private static final Logger logger = LoggerFactory.getLogger(DatabaseConfigPanel.class);
 
 	/**
 	 * 构造
 	 */
-	public DatabasePanelFrom() {
+	public DatabaseConfigPanel() {
 		initialize();
 		addComponent();
 		setContent();
@@ -128,7 +133,36 @@ public class DatabasePanelFrom extends JPanel {
 		panelGridSetting.add(labelDatabasePassword);
 		panelGridSetting.add(passwordFieldDatabasePassword);
 
+
+		//存放SQL目录选择
+		JPanel chooseFilePanel = new JPanel();
+		chooseFilePanel.setBackground(ConstantsUI.MAIN_BACK_COLOR);
+		chooseFilePanel.setLayout(new FlowLayout(FlowLayout.LEFT, ConstantsUI.MAIN_H_GAP, 0));
+
+		JLabel pathLabel = new JLabel("脚本存储目录:");
+		pathLabel.setPreferredSize(new Dimension(100, 30));
+
+		choosePathJTextField = new JTextField();
+		choosePathJTextField.setPreferredSize(new Dimension(300, 24));
+		choosePathJTextField.setEditable(false);
+
+		chooseBtn = new JButton("选择");
+		chooseBtn.setPreferredSize(new Dimension(60,24));
+
+
+
+		chooseFilePanel.add(pathLabel);
+		chooseFilePanel.add(choosePathJTextField);
+		chooseFilePanel.add(chooseBtn);
+
+		jFileChooser = new JFileChooser();
+		jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jFileChooser.setDialogTitle("选择目录存储脚本");
+
+
 		panelCenter.add(panelGridSetting);
+		panelCenter.add(chooseFilePanel);
+
 		return panelCenter;
 	}
 
@@ -178,15 +212,29 @@ public class DatabasePanelFrom extends JPanel {
 	 * 为相关组件添加事件监听
 	 */
 	private void addListener() {
+		//选择目录按钮
+		chooseBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int result = jFileChooser.showOpenDialog(DatabaseConfigPanel.this);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					String path = jFileChooser.getSelectedFile().getAbsolutePath();
+
+					choosePathJTextField.setText(path);
+				}
+			}
+		});
+
+		/**
+		 * 1，用于连接SQLSERVER
+		 * 2，可以将所有的数据都暂存到
+		 */
 		buttonSave.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					//ConstantsTools.CONFIGER.setHostFrom(textFieldDatabaseHost.getText());
-					//ConstantsTools.CONFIGER.setNameFrom(textFieldDatabaseName.getText());
-
 					String password = "";
 					String user = "";
 					try {
@@ -197,8 +245,6 @@ public class DatabasePanelFrom extends JPanel {
 						logger.error(PropertyUtil.getProperty("ds.ui.database.from.err.encode") + e1.toString());
 						e1.printStackTrace();
 					}
-					//ConstantsTools.CONFIGER.setUserFrom(user);
-					//ConstantsTools.CONFIGER.setPasswordFrom(password);
 
 					JOptionPane.showMessageDialog(AppMainWindow.panelTaskChoise, PropertyUtil.getProperty("ds.ui.save.success"), PropertyUtil.getProperty("ds.ui.tips"),
 							JOptionPane.PLAIN_MESSAGE);

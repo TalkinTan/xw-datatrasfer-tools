@@ -19,7 +19,7 @@ public class DBConnectInfoPanel extends JPanel {
     private static final long serialVersionUID = 1L;
 
     public static JPanel panelFrom;
-    private static JPanel databaseSettingPanelFrom;
+    private static JPanel databaseConfigPanel;
 
     /**
      * 构造
@@ -36,7 +36,7 @@ public class DBConnectInfoPanel extends JPanel {
     private void initialize() {
         this.setBackground(ConstantsUI.MAIN_BACK_COLOR);
         this.setLayout(new BorderLayout());
-        databaseSettingPanelFrom = new DatabasePanelFrom();
+        databaseConfigPanel = new DatabaseConfigPanel();
     }
 
     /**
@@ -100,7 +100,7 @@ public class DBConnectInfoPanel extends JPanel {
         panelList.add(panelFrom);
 
         panelCenter.add(panelList, BorderLayout.WEST);
-        panelCenter.add(databaseSettingPanelFrom, BorderLayout.CENTER);
+        panelCenter.add(databaseConfigPanel, BorderLayout.CENTER);
 
         return panelCenter;
     }

@@ -8,8 +8,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 /**
@@ -140,13 +140,15 @@ public class TaskDataSourcePanel extends JPanel {
         rowVector4.add("备注信息");
 
 
-        //for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 100; i++) {
 
-            data.add(rowVector1);
-            data.add(rowVector2);
-            data.add(rowVector3);
-            data.add(rowVector4);
-        //}
+            Vector v = new Vector();
+            v.add(false);
+            v.add("数据源名称" + i);
+            v.add("数据源ID" + i);
+
+            data.add(v);
+        }
 
         return data;
     }
@@ -157,10 +159,17 @@ public class TaskDataSourcePanel extends JPanel {
      */
     private void addListener() {
 
-        btnFilter.addMouseListener(new MouseAdapter() {
+        filterField.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void actionPerformed(ActionEvent e) {
+                btnFilter.doClick();
+            }
+        });
 
+
+        btnFilter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 TableRowSorter<TableModel> sorter = (TableRowSorter<TableModel>) dataSourceJTable.getRowSorter();
                 if (sorter == null) {
                     sorter = new TableRowSorter<>(dataSourceJTable.getModel());
